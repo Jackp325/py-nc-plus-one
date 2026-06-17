@@ -10,6 +10,7 @@ def seed():
     conn = get_connection()
 
     tables = [
+        "rsvps",
         "events", 
         "venues", 
         "users"
@@ -21,10 +22,12 @@ def seed():
     create_users_table(conn)
     create_venues_table(conn)
     create_events_table(conn)
+    create_rsvps_table(conn)
     
     insert_users(conn)
     insert_venues(conn)
     insert_events(conn)
+    insert_rsvps(conn)
 
     conn.commit()
     conn.close()
@@ -85,6 +88,19 @@ def create_events_table(conn):
 
     cursor.close()
 
+def create_rsvps_table(conn):
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS rsvps(
+            id SERIAL PRIMARY KEY,
+            attendee_id INT REFERENCES users(id),
+            event_id INT REFERENCES events(id),
+            created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+    """)
+
+    cursor.close()
 
 def insert_users(conn):
     cursor = conn.cursor()
@@ -165,7 +181,27 @@ def insert_events(conn):
 
     cursor.close()
 
+def insert_rsvps(conn):
+    cursor = conn.cursor()
 
+    rsvps = read_json("data/rsvps.json")
+
+    rsvp_info = [
+        (
+            rsvp["attendee_id"],
+            rsvp["event_id"],
+        )
+        for rsvp in rsvps
+    ]
+    cursor.executemany(
+        """
+        INSERT INTO rsvps (attendee_id, event_id)
+        VALUES (%s, %s)
+        """,
+        rsvp_info
+    )
+
+    cursor.close()
 
 
 if __name__ == "__main__":
