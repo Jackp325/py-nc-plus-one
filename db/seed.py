@@ -9,16 +9,22 @@ def seed():
     """
     conn = get_connection()
 
-    tables = ["venues", "users"]
-    # Drop tables in order of dependencies
+    tables = [
+        "events", 
+        "venues", 
+        "users"
+    ]
+    # Drop tables in reverse order of dependencies
     for table in tables:
         drop_table(conn, table)
 
     create_users_table(conn)
     create_venues_table(conn)
+    create_events_table(conn)
     
     insert_users(conn)
     insert_venues(conn)
+    insert_events(conn)
 
     conn.commit()
     conn.close()
@@ -56,6 +62,24 @@ def create_venues_table(conn):
             name VARCHAR(255) NOT NULL,
             address TEXT,
             capacity INT
+        );
+    """)
+
+    cursor.close()
+
+def create_events_table(conn):
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS events(
+            id SERIAL PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            description VARCHAR(255),
+            starts_at TIMESTAMPTZ NOT NULL,
+            ends_at TIMESTAMPTZ NOT NULL,
+            organiser_id INT REFERENCES users(id),
+            venue_id INT REFERENCES venues(id),
+            created_at TIMESTAMPTZ DEFAULT NOW()
         );
     """)
 
@@ -107,6 +131,42 @@ def insert_venues(conn):
     )
 
     cursor.close()
+
+def insert_events(conn):
+    cursor = conn.cursor()
+
+    events = read_json("data/events.json")
+
+    event_info = [
+        (
+            event["title"],
+            event["description"],
+            event["starts_at"],
+            event["ends_at"],
+            event["organiser_id"],
+            event["venue_id"]
+        )
+        for event in events
+    ]
+    cursor.executemany(
+        """
+        INSERT INTO events (
+            title, 
+            description, 
+            starts_at,
+            ends_at,
+            organiser_id,
+            venue_id
+        )
+        VALUES (%s, %s, %s, %s, %s, %s)
+        """,
+        event_info
+    )
+
+    cursor.close()
+
+
+
 
 if __name__ == "__main__":
     seed()
