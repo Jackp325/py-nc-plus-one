@@ -9,17 +9,21 @@ def seed():
     """
     conn = get_connection()
 
-    drop_users_table(conn)
+    drop_table(conn, "users")
+
     create_users_table(conn)
+    
     insert_users(conn)
 
     conn.commit()
     conn.close()
 
-def drop_users_table(conn):
+def drop_table(conn, table_name):
     cursor = conn.cursor()
 
-    cursor.execute("DROP TABLE IF EXISTS users;")
+    cursor.execute(f"""
+        DROP TABLE IF EXISTS {table_name};
+    """)
 
     cursor.close()
 
