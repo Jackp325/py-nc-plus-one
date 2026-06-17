@@ -1,4 +1,5 @@
 import json
 
-with open("data/users.json") as file:
-        users = json.load(file)
+def read_json(file_path):
+        with open(file_path) as f:
+                return json.load(f)
