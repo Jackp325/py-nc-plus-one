@@ -38,7 +38,7 @@ def drop_table(conn, table_name):
     cursor.execute(f"""
         DROP TABLE IF EXISTS {table_name};
     """)
-
+    # Internal coding, no risks of SQL injection
     cursor.close()
 
 def create_users_table(conn):
