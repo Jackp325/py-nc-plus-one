@@ -1,19 +1,64 @@
+## Installation
+
+Requirements:
+- Python 3.10+
+- PostgreSQL
+
+Clone the repo:
+
+```bash
+git clone https://github.com/Jackp325/py-nc-plus-one.git
+```
+
+Create the virtual environment, activate it, and install required libraries:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## Database Setup
 
-To create a clean local database, run:
+Create a clean local database:
 
 ```bash
 psql -d postgres -f db/setup.sql
 ```
 
-To connect to the database, run:
-
-psql -d nc_plus_one
+`setup.sql` ensures a clean, new database (nc_plus_one).
 
 ## Database Connection
 
-Create a local `.env` file containing your database credentials.
+Create a local `.env` file using `.env.example` as a template.
 
-Use the `.env.example` file as a reference.
+Never commit database credentials to GitHub. Ensure `.env` is included in `.gitignore`.
 
-Credentials should not be committed directly to connection.py
+To connect to the database, run:
+
+```bash
+psql -d nc_plus_one
+```
+
+## Seed the database
+
+To populate the database with data, run:
+
+```bash
+python -m db.seed
+```
+
+`seed.py`:
+* Removes any data from previous runs
+* Rebuilds the table schemas
+* Inserts fresh test data
+
+Tables must be dropped and recreated in an order that respects foreign key dependencies.
+
+## How to test
+
+Tests can be run using:
+
+```bash
+python -m pytest
+```
