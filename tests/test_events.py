@@ -16,3 +16,8 @@ def test_list_events_location_format_is_correct(client):
     response = client.get("/api/events")
     event = next(filter(lambda l: l["title"] == "Brighton Python Meetup", response.json()["events"]))
     assert event["location"] == expected_location
+
+def test_list_events_ordered_by_start_date(client):
+    response = client.get("/api/events")
+    dates = [event["starts_at"] for event in response.json()["events"]]
+    assert dates == sorted(dates)
