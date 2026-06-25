@@ -1,3 +1,36 @@
+# NC Plus One
+
+## Project Structure
+
+├── api
+│ └── routes  # API endpoints
+|   ├── users.py
+│   ├── venues.py
+|   ├── events.py
+|   └── rsvps.py
+│
+├── db
+│ ├── queries  # Database queries
+│ │ ├── users.py
+| | ├── venues.py
+| | ├── events.py
+| | └── rsvps.py
+│ ├── connection.py  # Database connection
+│ ├── seed.py  # Seed test data
+│ └── setup.sql  # Database setup
+│
+├── data  # Seed data
+├── tests 
+| ├── test_seed.py
+| └── conftest.py
+├── utils
+│ └── read_json.py
+│
+├── main.py  # Application entrypoint
+└── requirements.txt
+
+
+
 ## Installation
 
 Requirements:
