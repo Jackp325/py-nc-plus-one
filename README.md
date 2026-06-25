@@ -22,6 +22,7 @@
 ├── data  # Seed data
 ├── tests 
 | ├── test_seed.py
+| ├── test_events.py
 | └── conftest.py
 ├── utils
 │ └── read_json.py
