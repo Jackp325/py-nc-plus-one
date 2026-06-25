@@ -28,20 +28,20 @@ def test_events_by_id_returns_200_for_valid_id(client):
 
 def test_events_by_id_returns_correct_shape(client):
     response = client.get("/api/events/1")
-    event = response.json()["events"][0]
+    event = response.json()["event"]
     assert event.keys() == {
         "id",
         "title",
         "description",
         "starts_at",
-        "ends_at"
+        "ends_at",
         "location",
         "address",
         "capacity",
         "created_at"
     }
 
-def test_events_by_id_returns_404_for_invalid_eventt(client):
+def test_events_by_id_returns_404_for_invalid_event(client):
     response = client.get("/api/events/9999")
     assert response.status_code == 404
-    assert response.json()["error"]["code"] == "NOT_FOUND"
+    assert response.json()["detail"] == "Event not found"
