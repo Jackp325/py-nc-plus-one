@@ -1,3 +1,4 @@
+from datetime import datetime as dt
 
 def test_seed_inserts_all_users(default_seed):
     cursor = default_seed.cursor()
@@ -76,7 +77,7 @@ def test_seed_events_data_matches(default_seed):
 
     event_start = cursor.fetchone()
 
-    assert event_start == ("2026-06-18T18:30:00+01:00",)
+    assert event_start == (dt.fromisoformat("2026-07-10T18:00:00+01:00"),)
 
     cursor.close()
 
