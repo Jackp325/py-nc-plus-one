@@ -44,4 +44,4 @@ def test_events_by_id_returns_correct_shape(client):
 def test_events_by_id_returns_404_for_invalid_event(client):
     response = client.get("/api/events/9999")
     assert response.status_code == 404
-    assert response.json()["detail"] == "Event not found"
+    assert response.json()["error"]["code"] == "NOT_FOUND"
