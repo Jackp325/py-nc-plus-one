@@ -21,3 +21,27 @@ def test_list_events_ordered_by_start_date(client):
     response = client.get("/api/events")
     dates = [event["starts_at"] for event in response.json()["events"]]
     assert dates == sorted(dates)
+
+def test_events_by_id_returns_200_for_valid_id(client):
+    response = client.get("/api/events/1")
+    assert response.status_code == 200
+
+def test_events_by_id_returns_correct_shape(client):
+    response = client.get("/api/events/1")
+    event = response.json()["events"][0]
+    assert event.keys() == {
+        "id",
+        "title",
+        "description",
+        "starts_at",
+        "ends_at"
+        "location",
+        "address",
+        "capacity",
+        "created_at"
+    }
+
+def test_events_by_id_returns_404_for_invalid_eventt(client):
+    response = client.get("/api/events/9999")
+    assert response.status_code == 404
+    assert response.json()["error"]["code"] == "NOT_FOUND"
