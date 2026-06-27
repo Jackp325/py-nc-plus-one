@@ -11,6 +11,11 @@ class LoginRequest(BaseModel):
     email: str
     password: str
 
+class RegisterUser(BaseModel):
+    name: str
+    email: str
+    password: str
+
 @router.post("/login")
 def login(payload:LoginRequest):
     conn = get_connection()
@@ -23,4 +28,4 @@ def login(payload:LoginRequest):
         )
     token = create_access_token(row["id"])
 
-    return {"access_token": token, "token_type": "bearer"}
+    return {"token": token}
