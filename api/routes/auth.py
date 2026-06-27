@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from psycopg2.errors import UniqueViolation
 
 from db.connection import get_connection
-from db.queries.users import get_user_by_email
+from db.queries.users import get_user_by_email, register_user
 from utils.security import check_password, create_access_token
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
@@ -29,3 +30,19 @@ def login(payload:LoginRequest):
     token = create_access_token(row["id"])
 
     return {"token": token}
+
+@router.post("/register", status_code=201)
+def register(payload:RegisterUser):
+    conn = get_connection()
+    try:
+        row = register_user(conn, payload.name, payload.email, payload.password)
+        conn.commit()
+    except UniqueViolation:
+        raise HTTPException(
+            status_code=409,
+            detail={"code": "CONFLICT", "message": "User already exists"},
+        )
+    finally:
+        conn.close()
+
+    return {"user": row}
