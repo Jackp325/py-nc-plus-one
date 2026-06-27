@@ -1,12 +1,8 @@
 from db.connection import get_connection
 from utils.read_json import read_json
+from utils.security import hash_password
 
 def seed():
-    """
-    1. Removes any data from previous runs
-    2. Rebuilds the table schemas
-    3. Inserts the test data
-    """
     conn = get_connection()
 
     tables = [
@@ -111,7 +107,7 @@ def insert_users(conn):
         (
             user["name"],
             user["email"],
-            user["password"]
+            hash_password(user["password"])
         )
         for user in users
     ]

@@ -15,15 +15,13 @@ def test_seed_user_ids_data_matches(default_seed):
     cursor = default_seed.cursor()
 
     cursor.execute("""
-        SELECT name, email, password FROM users
+        SELECT name FROM users
         WHERE email = %s;
     """, ('bob@example.com',))
 
     user = cursor.fetchone()
 
-    assert user == (
-        "Bob Nguyen", "bob@example.com", "password123"
-    )
+    assert user == ("Bob Nguyen",)
 
     cursor.close()
 

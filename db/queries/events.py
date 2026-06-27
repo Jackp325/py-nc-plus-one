@@ -1,5 +1,7 @@
+from psycopg2.extras import RealDictCursor
+
 def get_all_events(conn):
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute("""
     SELECT 
         events.id,
@@ -16,7 +18,7 @@ def get_all_events(conn):
     return rows
 
 def get_event_by_id(conn, event_id):
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute("""
     SELECT 
         events.id,

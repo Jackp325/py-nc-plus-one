@@ -10,17 +10,8 @@ def list_events():
     conn = get_connection()
     rows = get_all_events(conn)
     conn.close()
-    events = [
-        {
-            "id": r[0],
-            "title": r[1],
-            "starts_at": r[2],
-            "ends_at": r[3],
-            "location": r[4]
-        }
-        for r in rows
-    ]
-    return {"events": events}
+
+    return {"events": rows}
 
 @router.get("/{id}")
 def get_event(id: int):
@@ -33,15 +24,15 @@ def get_event(id: int):
             detail={"code": "NOT_FOUND", "message": "event not found"},
         )
     event = {
-            "id": row[0],
-            "title": row[1],
-            "description": row[2],
-            "starts_at": row[3],
-            "ends_at": row[4],
-            "location": row[5],
-            "address": row[6],
-            "capacity": row[7],
-            "created_at": row[8]
+            "id": row["id"],
+            "title": row["title"],
+            "description": row["description"],
+            "starts_at": row["starts_at"],
+            "ends_at": row["ends_at"],
+            "location": row["location"],
+            "address": row["address"],
+            "capacity": row["capacity"],
+            "created_at": row["created_at"]
         }
 
     return {"event": event}
